@@ -43,7 +43,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             }
         }
         
-        self.pullToRefresh = ADChromePullToRefresh(view: self.topView, topViewOriginalAlpha: 1, forScrollView: self.tableView, scrollViewOriginalOffsetY: 0, leftActionHandler: nil, centerActionHandler: centerActionHandler)
+        let sideActionHandler: () -> Void = { () in
+            println("Side handled")
+        }
+        
+        self.pullToRefresh = ADChromePullToRefresh(view: self.topView, topViewOriginalAlpha: 1, forScrollView: self.tableView, scrollViewOriginalOffsetY: 0, leftActionHandler: sideActionHandler, centerActionHandler: centerActionHandler, rightActionHandler: sideActionHandler)
     }
 
     //MARK: - UITableViewDataSource

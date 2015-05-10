@@ -67,7 +67,7 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     private weak var pullToRefreshSuperview: UIView!
     
     init(view: UIView, topViewOriginalAlpha: CGFloat, forScrollView scrollView: UIScrollView, scrollViewOriginalOffsetY: CGFloat,
-         leftActionHandler: (() -> Void)? = nil, centerActionHandler: (() -> Void)? = nil, rightActionHandler: (() -> Void)? = nil) {
+         leftActionHandler: (() -> Void), centerActionHandler: (() -> Void), rightActionHandler: (() -> Void)) {
         if view.superview == nil {
             assert(false, "can't add pull to refresh view to nil")
         }
