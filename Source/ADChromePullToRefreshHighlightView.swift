@@ -39,7 +39,7 @@ class ADChromePullToRefreshHighlightView: UIView {
     }
     
     private func updateDeltaXForCenter(deltaX: CGFloat) -> CGFloat {
-        return fabs(deltaX) / 8
+        return fabs(deltaX) / 6
     }
     
     private func updateDeltaXForStretchingSide(deltaX: CGFloat) -> CGFloat {
