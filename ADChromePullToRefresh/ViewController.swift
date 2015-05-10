@@ -8,18 +8,54 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    @IBOutlet private var tableView: UITableView!
+    @IBOutlet private var topView: UIView!
+    
+    private var pullToRefresh: ADChromePullToRefresh!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        self.tableView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.topView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.addPullToRefresh()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setUpConstraints()
+    }
+    
+    //MARK: - Helpers
+    
+    func setUpConstraints() {
+        self.pullToRefresh.setUpConstraints()
+    }
+    
+    //MARK: - ADChromePullToRefresh
+    
+    func addPullToRefresh() {
+        self.pullToRefresh = ADChromePullToRefresh(view: self.topView, topViewOriginalAlpha: 1, forScrollView: self.tableView, scrollViewOriginalOffsetY: 0)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    //MARK: - UITableViewDataSource
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
     }
-
-
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 20
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var cell: UITableViewCell? = tableView.dequeueReusableCellWithIdentifier("cellIdentifier") as? UITableViewCell
+        if cell == nil {
+            cell = UITableViewCell(style: .Default, reuseIdentifier: "cellIdentifier")
+        }
+        cell?.textLabel?.text = "Title"
+        return cell!
+    }
 }
 
