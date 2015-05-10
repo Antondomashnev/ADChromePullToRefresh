@@ -36,7 +36,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     //MARK: - ADChromePullToRefresh
     
     func addPullToRefresh() {
-        self.pullToRefresh = ADChromePullToRefresh(view: self.topView, topViewOriginalAlpha: 1, forScrollView: self.tableView, scrollViewOriginalOffsetY: 0)
+        let centerActionHandler: () -> Void = { () in
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(3 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                self.pullToRefresh.completePullToRefresh()
+            }
+        }
+        
+        self.pullToRefresh = ADChromePullToRefresh(view: self.topView, topViewOriginalAlpha: 1, forScrollView: self.tableView, scrollViewOriginalOffsetY: 0, leftActionHandler: nil, centerActionHandler: centerActionHandler)
     }
 
     //MARK: - UITableViewDataSource

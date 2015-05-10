@@ -9,7 +9,31 @@ import Foundation
 import UIKit
 
 
-class ADChromePullToRefresh: NSObject {
+class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
+    
+    var previousState: ADChromePullToRefreshState = ADChromePullToRefreshState.Stopped
+    var state: ADChromePullToRefreshState = ADChromePullToRefreshState.Stopped {
+        willSet {
+            self.previousState = self.state
+        }
+        didSet {
+            if self.highlightedActionViewType == .Center {
+                self.updateForState(self.state)
+            }
+        }
+    }
+    
+    private var highlightedActionViewType: ADChromePullToRefreshActionViewType?
+    
+    private let scrollViewOriginalTopInset: CGFloat
+    private let scrollViewOriginalOffsetY: CGFloat
+    private let scrollViewOffsetYDeltaForOneAlpha: CGFloat = 80
+    private let scrollViewOffsetYDeltaForTopViewZeroAlpha: CGFloat = 20
+    private let pullToRefreshTreschold: CGFloat = -90.0
+    
+    private let leftActionHandler: (() -> Void)?
+    private let rightActionHandler: (() -> Void)?
+    private let centerActionHandler: (() -> Void)?
     
     private var context = "com.antondomashnev.ADChromePullToRefresh.KVOContext"
     private var isObserved: Bool = false
@@ -38,20 +62,21 @@ class ADChromePullToRefresh: NSObject {
     private var pullToRefreshView: ADChromePullToRefreshView!
     private var pullToRefreshViewHeightConstraint: NSLayoutConstraint!
     
-    private let scrollViewOriginalOffsetY: CGFloat
-    private let scrollViewOffsetYDeltaForOneAlpha: CGFloat = 80
-    private let scrollViewOffsetYDeltaForTopViewZeroAlpha: CGFloat = 20
-    
     private weak var scrollView: UIScrollView!
     private weak var topView: UIView!
     private weak var pullToRefreshSuperview: UIView!
     
-    init(view: UIView, topViewOriginalAlpha: CGFloat, forScrollView scrollView: UIScrollView, scrollViewOriginalOffsetY: CGFloat) {
+    init(view: UIView, topViewOriginalAlpha: CGFloat, forScrollView scrollView: UIScrollView, scrollViewOriginalOffsetY: CGFloat,
+         leftActionHandler: (() -> Void)? = nil, centerActionHandler: (() -> Void)? = nil, rightActionHandler: (() -> Void)? = nil) {
         if view.superview == nil {
             assert(false, "can't add pull to refresh view to nil")
         }
+        self.leftActionHandler = leftActionHandler
+        self.rightActionHandler = rightActionHandler
+        self.centerActionHandler = centerActionHandler
         self.scrollViewOriginalOffsetY = scrollViewOriginalOffsetY
         self.scrollView = scrollView
+        self.scrollViewOriginalTopInset = self.scrollView.contentInset.top
         self.topView = view
         self.pullToRefreshSuperview = self.topView.superview
         super.init()
@@ -63,7 +88,22 @@ class ADChromePullToRefresh: NSObject {
         self.unsubscribeFromScrollViewContentOffset()
     }
     
+    //MARK: - ADChromePullToRefreshViewDelegate
+    
+    func chromePullToRefreshViewDidChangeHighlightedView(newHighlightedActionViewType: ADChromePullToRefreshActionViewType?) {
+        self.pullToRefreshStartPanGestureX = self.scrollView.panGestureRecognizer.locationInView(self.pullToRefreshSuperview).x
+        self.highlightedActionViewType = newHighlightedActionViewType
+        
+    }
+    
     //MARK: - Interface
+    
+    func completePullToRefresh() {
+        if self.state != .Loading {
+            return
+        }
+        self.state = .Stopped
+    }
     
     func setUpConstraints() {
         let viewsDictionary = ["pullToRefresh" : self.pullToRefreshView]
@@ -80,6 +120,55 @@ class ADChromePullToRefresh: NSObject {
     }
     
     //MARK: - Helpers
+    
+    func actionHandlerForCurrentHighlghtedItem() -> (() -> Void)? {
+        if let highlightedActionViewType = self.highlightedActionViewType {
+            switch highlightedActionViewType{
+            case .Left:
+                return self.leftActionHandler
+            case .Right:
+                return self.rightActionHandler
+            case .Center:
+                return self.centerActionHandler
+            }
+        }
+        return nil
+    }
+    
+    func setScrollViewContentInset(contentInset: UIEdgeInsets, scrollView: UIScrollView) {
+        let currentOffsetY = scrollView.contentOffset.y
+        let temporaryOffsetY = currentOffsetY + scrollView.contentInset.top
+        let offsetX = scrollView.contentOffset.x
+        scrollView.setContentOffset(CGPoint(x: offsetX, y: temporaryOffsetY), animated: true)
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            scrollView.contentInset = contentInset
+        }
+    }
+    
+    func resetScrollViewContentInset() {
+        var currentInsets = self.scrollView.contentInset
+        currentInsets.top = self.scrollViewOriginalTopInset
+        self.setScrollViewContentInset(currentInsets, scrollView: self.scrollView)
+    }
+    
+    func setScrollViewContentInsetForLoading() {
+        let offset = max(self.scrollView.contentOffset.y * -1, 0)
+        var currentInsets = self.scrollView.contentInset
+        currentInsets.top = min(offset, self.scrollViewOriginalTopInset + CGRectGetHeight(self.pullToRefreshView.bounds))
+        self.setScrollViewContentInset(currentInsets, scrollView: self.scrollView)
+    }
+    
+    func updateForState(newState: ADChromePullToRefreshState) {
+        switch state {
+        case .Stopped:
+            self.resetScrollViewContentInset()
+        case .Triggered:
+            break
+        case .Loading:
+            self.setScrollViewContentInsetForLoading()
+        }
+    }
     
     func subscribeOnScrollViewContentOffset() {
         if self.isObserved {
@@ -115,21 +204,42 @@ class ADChromePullToRefresh: NSObject {
         self.pullToRefreshViewHeightConstraint.constant = newPullToRefreshHeight
     }
     
+    func updateStateWithNewOffsetY(offsetY: CGFloat) {
+        var scrollOffsetThreshold: CGFloat = self.scrollViewOriginalTopInset + pullToRefreshTreschold
+        let dragging = self.scrollView.dragging
+            if self.state == .Loading {
+                return
+            }
+        if !dragging && self.state == .Triggered {
+            if self.highlightedActionViewType == .Center {
+                self.state = .Loading
+            }
+            else {
+                self.state = .Stopped
+            }
+            if let actionBlock = self.actionHandlerForCurrentHighlghtedItem() {
+                actionBlock()
+            }
+        }
+        else if offsetY < scrollOffsetThreshold && dragging && self.state == .Stopped {
+            self.state = .Triggered
+        }
+        else if offsetY >= scrollOffsetThreshold && self.state != .Stopped {
+            self.state = .Stopped
+        }
+    }
+    
     //MARK: - Gestures
     
     private var i = 0
     func handleScrollViewPanGesture(panGesture: UIPanGestureRecognizer) {
-        if !self.isPanGestureHandlerAdded {
+        if !self.isPanGestureHandlerAdded || self.state == .Loading {
             return
         }
         
         let currentX = panGesture.locationInView(self.pullToRefreshSuperview).x
         let delta = currentX - self.pullToRefreshStartPanGestureX
-        if self.pullToRefreshView.updateUIWithXDelta(delta) {
-            if fabs(delta) > self.pullToRefreshView.deltaToChangeHighlightedItem {
-                self.pullToRefreshStartPanGestureX = currentX
-            }
-        }
+        self.pullToRefreshView.updateUIWithXDelta(delta)
     }
     
     //MARK: - KVO
@@ -138,16 +248,20 @@ class ADChromePullToRefresh: NSObject {
         if context != &self.context {
             return
         }
+        if self.state == .Loading {
+            return
+        }
         
         let newOffsetY = self.scrollView.contentOffset.y
         self.updateViewsWithNewOffsetY(newOffsetY)
+        self.updateStateWithNewOffsetY(newOffsetY)
         self.lastObservedOffsetY = newOffsetY
     }
     
     //MARK: - UI
     
     func createPullToRefreshView() {
-        self.pullToRefreshView = ADChromePullToRefreshView(frame: self.topView.bounds)
+        self.pullToRefreshView = ADChromePullToRefreshView(frame: self.topView.bounds, delegate: self)
         self.pullToRefreshSuperview.addSubview(self.pullToRefreshView)
     }
 }

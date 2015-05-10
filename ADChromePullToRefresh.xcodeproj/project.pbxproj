@@ -21,6 +21,8 @@
 		6DCA92541AECFFD800F03E7A /* ADChromePullToRefreshRIghtActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCA92531AECFFD800F03E7A /* ADChromePullToRefreshRIghtActionView.swift */; };
 		6DCA92581AED6EE000F03E7A /* ADChromePullToRefreshActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCA92571AED6EE000F03E7A /* ADChromePullToRefreshActionView.swift */; };
 		6DCA925A1AED747F00F03E7A /* ADChromePullToRefreshHighlightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCA92591AED747F00F03E7A /* ADChromePullToRefreshHighlightView.swift */; };
+		6DCB63371AFF792D00C4713F /* ADChromePullToRefreshActionViewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCB63361AFF792D00C4713F /* ADChromePullToRefreshActionViewType.swift */; };
+		6DCB63391AFF82A000C4713F /* ADChromePullToRefreshState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCB63381AFF82A000C4713F /* ADChromePullToRefreshState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		6DCA92531AECFFD800F03E7A /* ADChromePullToRefreshRIghtActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ADChromePullToRefreshRIghtActionView.swift; sourceTree = "<group>"; };
 		6DCA92571AED6EE000F03E7A /* ADChromePullToRefreshActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ADChromePullToRefreshActionView.swift; sourceTree = "<group>"; };
 		6DCA92591AED747F00F03E7A /* ADChromePullToRefreshHighlightView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ADChromePullToRefreshHighlightView.swift; sourceTree = "<group>"; };
+		6DCB63361AFF792D00C4713F /* ADChromePullToRefreshActionViewType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ADChromePullToRefreshActionViewType.swift; sourceTree = "<group>"; };
+		6DCB63381AFF82A000C4713F /* ADChromePullToRefreshState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ADChromePullToRefreshState.swift; sourceTree = "<group>"; };
 		E99DC5D1DF494F347E2A68E6 /* Pods-ADChromePullToRefresh.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ADChromePullToRefresh.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ADChromePullToRefresh/Pods-ADChromePullToRefresh.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -144,6 +148,8 @@
 				6DCA92511AECFFCC00F03E7A /* ADChromePullToRefreshLeftActionView.swift */,
 				6DCA92531AECFFD800F03E7A /* ADChromePullToRefreshRIghtActionView.swift */,
 				6DCA92591AED747F00F03E7A /* ADChromePullToRefreshHighlightView.swift */,
+				6DCB63361AFF792D00C4713F /* ADChromePullToRefreshActionViewType.swift */,
+				6DCB63381AFF82A000C4713F /* ADChromePullToRefreshState.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -303,11 +309,13 @@
 				6DCA92501AECFFBB00F03E7A /* ADChromePullToRefreshCenterActionView.swift in Sources */,
 				6D97B7111AE2C3660003DDEA /* ADChromePullToRefresh.swift in Sources */,
 				6DCA92521AECFFCC00F03E7A /* ADChromePullToRefreshLeftActionView.swift in Sources */,
+				6DCB63371AFF792D00C4713F /* ADChromePullToRefreshActionViewType.swift in Sources */,
 				6DCA925A1AED747F00F03E7A /* ADChromePullToRefreshHighlightView.swift in Sources */,
 				6DCA92581AED6EE000F03E7A /* ADChromePullToRefreshActionView.swift in Sources */,
 				6DCA92541AECFFD800F03E7A /* ADChromePullToRefreshRIghtActionView.swift in Sources */,
 				6D97B6F21AE2C30D0003DDEA /* ViewController.swift in Sources */,
 				6D97B6F01AE2C30D0003DDEA /* AppDelegate.swift in Sources */,
+				6DCB63391AFF82A000C4713F /* ADChromePullToRefreshState.swift in Sources */,
 				6DCA924E1AECFD6B00F03E7A /* ADChromePullToRefreshView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

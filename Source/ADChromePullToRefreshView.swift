@@ -8,7 +8,13 @@
 
 import UIKit
 
+protocol ADChromePullToRefreshViewDelegate: NSObjectProtocol {
+    func chromePullToRefreshViewDidChangeHighlightedView(newHighlightedActionViewType: ADChromePullToRefreshActionViewType?)
+}
+
 class ADChromePullToRefreshView: UIView {
+    
+    weak var delegate: ADChromePullToRefreshViewDelegate?
     
     private var leftActionViewHeightConstraint: NSLayoutConstraint!
     private var rightActionViewHeightConstraint: NSLayoutConstraint!
@@ -27,8 +33,9 @@ class ADChromePullToRefreshView: UIView {
     private var rightActionView: ADChromePullToRefreshRightActionView!
     private var highlightView: ADChromePullToRefreshHighlightView!
     
-    override init(frame: CGRect) {
+    init(frame: CGRect, delegate: ADChromePullToRefreshViewDelegate) {
         super.init(frame: frame)
+        self.delegate = delegate
         self.commonInit()
     }
     
@@ -99,12 +106,14 @@ class ADChromePullToRefreshView: UIView {
             }
             self.highlightView.highlightActionViewAtPoint(self.centerActionView.center.x)
             self.centerActionView.setHighighted(true)
+            self.delegate?.chromePullToRefreshViewDidChangeHighlightedView(ADChromePullToRefreshActionViewType.Center)
         }
         else {
             self.highlightView.reset()
             self.centerActionView.setHighighted(false)
             self.leftActionView.setHighighted(false)
             self.rightActionView.setHighighted(false)
+            self.delegate?.chromePullToRefreshViewDidChangeHighlightedView(nil)
         }
     }
     
@@ -118,11 +127,13 @@ class ADChromePullToRefreshView: UIView {
                 self.leftActionView.setHighighted(true)
                 self.centerActionView.setHighighted(false)
                 self.highlightView.highlightActionViewAtPoint(self.leftActionView.center.x)
+                self.delegate?.chromePullToRefreshViewDidChangeHighlightedView(ADChromePullToRefreshActionViewType.Left)
             }
             else {
                 self.rightActionView.setHighighted(false)
                 self.centerActionView.setHighighted(true)
                 self.highlightView.highlightActionViewAtPoint(self.centerActionView.center.x)
+                self.delegate?.chromePullToRefreshViewDidChangeHighlightedView(ADChromePullToRefreshActionViewType.Center)
             }
         }
         else if delta > self.deltaToChangeHighlightedItem {
@@ -130,11 +141,13 @@ class ADChromePullToRefreshView: UIView {
                 self.leftActionView.setHighighted(false)
                 self.centerActionView.setHighighted(true)
                 self.highlightView.highlightActionViewAtPoint(self.centerActionView.center.x)
+                self.delegate?.chromePullToRefreshViewDidChangeHighlightedView(ADChromePullToRefreshActionViewType.Center)
             }
             else if self.centerActionView.isHighlighted() {
                 self.rightActionView.setHighighted(true)
                 self.centerActionView.setHighighted(false)
                 self.highlightView.highlightActionViewAtPoint(self.rightActionView.center.x)
+                self.delegate?.chromePullToRefreshViewDidChangeHighlightedView(ADChromePullToRefreshActionViewType.Right)
             }
             else {
                 return false
