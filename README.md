@@ -26,15 +26,15 @@ init(view: UIView, forScrollView scrollView: UIScrollView, scrollViewOriginalOff
 //Delegate object must implement two functions
 
 /*
- * Use this function to provide and action for the given action view type
+ * Use this function to provide an action for the given action view type
  */
 func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, actionForViewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshAction?
 
-/*
+//*
  * Use this function to create view with icon for the given pullToRefresh. To customize view use subclass of   
  * ADChromePullToRefreshActionView
  * @see ADChromePullToRefreshActionView.swift
  * @see UITableViewDelegate - similar method to get header and footer view
- */
+ *//
 func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, viewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView
 ```
