@@ -20,16 +20,16 @@ For the example of usage see viewController.swift file in demo project
  * @param delegate - object conformed to ADChromePullToRefreshDelegate protocol
  */
 init(view: UIView, forScrollView scrollView: UIScrollView, scrollViewOriginalOffsetY: CGFloat, delegate: ADChromePullToRefreshDelegate) 
+```
 
+```swift
 //Delegate object must implement two functions
 
 /*
  * Use this function to provide and action for the given action view type
  */
 func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, actionForViewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshAction?
-```
 
-```swift
 /*
  * Use this function to create view with icon for the given pullToRefresh. To customize view use subclass of   
  * ADChromePullToRefreshActionView
