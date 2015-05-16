@@ -20,9 +20,7 @@ For the example of usage see viewController.swift file in demo project
  * @param delegate - object conformed to ADChromePullToRefreshDelegate protocol
  */
 init(view: UIView, forScrollView scrollView: UIScrollView, scrollViewOriginalOffsetY: CGFloat, delegate: ADChromePullToRefreshDelegate) 
-```
 
-```swift
 //Delegate object must implement two functions
 
 /*
@@ -30,11 +28,6 @@ init(view: UIView, forScrollView scrollView: UIScrollView, scrollViewOriginalOff
  */
 func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, actionForViewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshAction?
 
-//*
- * Use this function to create view with icon for the given pullToRefresh. To customize view use subclass of   
- * ADChromePullToRefreshActionView
- * @see ADChromePullToRefreshActionView.swift
- * @see UITableViewDelegate - similar method to get header and footer view
- *//
+
 func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, viewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView
 ```
