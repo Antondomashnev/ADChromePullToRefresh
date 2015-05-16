@@ -1,5 +1,5 @@
 # ADChromePullToRefresh
-Yet again custom pull to refresh for your needs.
+Yet another custom pull to refresh for your needs.
 
 Inspire by this dribble and Google Chrome iOS app
 
