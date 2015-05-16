@@ -40,3 +40,9 @@ func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, actionForViewWith
  */
 func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, viewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView
 ```
+
+------------------------------------
+Adding ADChromePullToRefresh to your project
+====================================
+
+Add `pod 'ADDropDownMenuView' '~> 1.0.0'` (i hope it will be merged soon =)) to your Podfile.
