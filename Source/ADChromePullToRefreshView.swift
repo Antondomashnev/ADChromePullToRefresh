@@ -10,6 +10,8 @@ import UIKit
 
 protocol ADChromePullToRefreshViewDelegate: NSObjectProtocol {
     func chromePullToRefreshViewDidChangeHighlightedView(newHighlightedActionViewType: ADChromePullToRefreshActionViewType?)
+    func chromePullToRefreshView(view: ADChromePullToRefreshView, actionViewWithType type: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView
+    
 }
 
 class ADChromePullToRefreshView: UIView {
@@ -28,9 +30,9 @@ class ADChromePullToRefreshView: UIView {
     private let viewsSize = CGSize(width: 22.0, height: 22.0)
     private let highlightViewHeight: CGFloat = 60.0
 
-    private var centerActionView: ADChromePullToRefreshCenterActionView!
-    private var leftActionView: ADChromePullToRefreshLeftActionView!
-    private var rightActionView: ADChromePullToRefreshRightActionView!
+    private var centerActionView: ADChromePullToRefreshActionView!
+    private var leftActionView: ADChromePullToRefreshActionView!
+    private var rightActionView: ADChromePullToRefreshActionView!
     private var highlightView: ADChromePullToRefreshHighlightView!
     
     init(frame: CGRect, delegate: ADChromePullToRefreshViewDelegate) {
@@ -76,17 +78,17 @@ class ADChromePullToRefreshView: UIView {
     }
     
     private func addCenterActionView() {
-        self.centerActionView = ADChromePullToRefreshCenterActionView.centerActionView()
+        self.centerActionView = self.delegate!.chromePullToRefreshView(self, actionViewWithType: .Center)
         self.addSubview(self.centerActionView)
     }
     
     private func addLeftActionView() {
-        self.leftActionView = ADChromePullToRefreshLeftActionView.leftActiionView()
+        self.leftActionView = self.delegate!.chromePullToRefreshView(self, actionViewWithType: .Left)
         self.addSubview(self.leftActionView)
     }
     
     private func addRightActionView() {
-        self.rightActionView = ADChromePullToRefreshRightActionView.rightActiionView()
+        self.rightActionView = self.delegate!.chromePullToRefreshView(self, actionViewWithType: .Right)
         self.addSubview(self.rightActionView)
     }
     

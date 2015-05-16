@@ -8,14 +8,19 @@
 import Foundation
 import UIKit
 
+typealias ADChromePullToRefreshAction = () -> Void
+
+protocol ADChromePullToRefreshDelegate: NSObjectProtocol {
+    func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, viewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView
+    func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, actionForViewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshAction?
+}
+
 
 class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     
-    var previousState: ADChromePullToRefreshState = ADChromePullToRefreshState.Stopped
-    var state: ADChromePullToRefreshState = ADChromePullToRefreshState.Stopped {
-        willSet {
-            self.previousState = self.state
-        }
+    weak var delegate: ADChromePullToRefreshDelegate?
+    
+    private var state: ADChromePullToRefreshState = ADChromePullToRefreshState.Stopped {
         didSet {
             if self.highlightedActionViewType == .Center {
                 self.updateForState(self.state)
@@ -30,10 +35,6 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     private let scrollViewOffsetYDeltaForOneAlpha: CGFloat = 80
     private let scrollViewOffsetYDeltaForTopViewZeroAlpha: CGFloat = 20
     private let pullToRefreshTreschold: CGFloat = -90.0
-    
-    private let leftActionHandler: (() -> Void)?
-    private let rightActionHandler: (() -> Void)?
-    private let centerActionHandler: (() -> Void)?
     
     private var context = "com.antondomashnev.ADChromePullToRefresh.KVOContext"
     private var isObserved: Bool = false
@@ -66,20 +67,20 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     private weak var topView: UIView!
     private weak var pullToRefreshSuperview: UIView!
     
-    init(view: UIView, topViewOriginalAlpha: CGFloat, forScrollView scrollView: UIScrollView, scrollViewOriginalOffsetY: CGFloat,
-         leftActionHandler: (() -> Void), centerActionHandler: (() -> Void), rightActionHandler: (() -> Void)) {
+    init(view: UIView, forScrollView scrollView: UIScrollView, scrollViewOriginalOffsetY: CGFloat, delegate: ADChromePullToRefreshDelegate) {
         if view.superview == nil {
             assert(false, "can't add pull to refresh view to nil")
         }
-        self.leftActionHandler = leftActionHandler
-        self.rightActionHandler = rightActionHandler
-        self.centerActionHandler = centerActionHandler
+        
+        self.delegate = delegate
         self.scrollViewOriginalOffsetY = scrollViewOriginalOffsetY
         self.scrollView = scrollView
         self.scrollViewOriginalTopInset = self.scrollView.contentInset.top
         self.topView = view
         self.pullToRefreshSuperview = self.topView.superview
+            
         super.init()
+            
         self.createPullToRefreshView()
         self.subscribeOnScrollViewContentOffset()
     }
@@ -93,7 +94,10 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     func chromePullToRefreshViewDidChangeHighlightedView(newHighlightedActionViewType: ADChromePullToRefreshActionViewType?) {
         self.pullToRefreshStartPanGestureX = self.scrollView.panGestureRecognizer.locationInView(self.pullToRefreshSuperview).x
         self.highlightedActionViewType = newHighlightedActionViewType
-        
+    }
+    
+    func chromePullToRefreshView(view: ADChromePullToRefreshView, actionViewWithType type: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView {
+        return self.delegate!.chromePullToRefresh(self, viewWithType: type)
     }
     
     //MARK: - Interface
@@ -120,20 +124,6 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     }
     
     //MARK: - Helpers
-    
-    func actionHandlerForCurrentHighlghtedItem() -> (() -> Void)? {
-        if let highlightedActionViewType = self.highlightedActionViewType {
-            switch highlightedActionViewType{
-            case .Left:
-                return self.leftActionHandler
-            case .Right:
-                return self.rightActionHandler
-            case .Center:
-                return self.centerActionHandler
-            }
-        }
-        return nil
-    }
     
     func setScrollViewContentInset(contentInset: UIEdgeInsets, scrollView: UIScrollView) {
         let currentOffsetY = scrollView.contentOffset.y
@@ -217,8 +207,10 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
             else {
                 self.state = .Stopped
             }
-            if let actionBlock = self.actionHandlerForCurrentHighlghtedItem() {
-                actionBlock()
+            if let highlightedActionViewType = self.highlightedActionViewType {
+                if let actionBlock = self.delegate!.chromePullToRefresh(self, actionForViewWithType: highlightedActionViewType) {
+                    actionBlock()
+                }
             }
         }
         else if offsetY < scrollOffsetThreshold && dragging && self.state == .Stopped {

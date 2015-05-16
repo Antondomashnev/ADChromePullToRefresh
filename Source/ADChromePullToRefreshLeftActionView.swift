@@ -24,7 +24,7 @@ class ADChromePullToRefreshLeftActionView: ADChromePullToRefreshActionView {
         self.iconView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, newTranslateX, 0)
     }
     
-    class func leftActiionView() -> ADChromePullToRefreshLeftActionView {
+    class func leftActionView() -> ADChromePullToRefreshLeftActionView {
         let view = ADChromePullToRefreshLeftActionView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         view.iconMaskView.image = UIImage(named: "ic_add_black")
         view.iconView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, view.initialTranslateX, 0)
