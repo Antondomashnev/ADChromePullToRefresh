@@ -31,6 +31,8 @@ init(view: UIView, forScrollView scrollView: UIScrollView, scrollViewOriginalOff
  */
 func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, viewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView
 
+//
+
 /*
  * Use this function to provide and action for the given action view type
  */
