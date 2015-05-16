@@ -11,12 +11,11 @@ import UIKit
 protocol ADChromePullToRefreshViewDelegate: NSObjectProtocol {
     func chromePullToRefreshViewDidChangeHighlightedView(newHighlightedActionViewType: ADChromePullToRefreshActionViewType?)
     func chromePullToRefreshView(view: ADChromePullToRefreshView, actionViewWithType type: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView
-    
 }
 
 class ADChromePullToRefreshView: UIView {
     
-    weak var delegate: ADChromePullToRefreshViewDelegate?
+    weak var delegate: ADChromePullToRefreshViewDelegate!
     
     private var leftActionViewHeightConstraint: NSLayoutConstraint!
     private var rightActionViewHeightConstraint: NSLayoutConstraint!

@@ -18,7 +18,7 @@ protocol ADChromePullToRefreshDelegate: NSObjectProtocol {
 
 class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     
-    weak var delegate: ADChromePullToRefreshDelegate?
+    weak var delegate: ADChromePullToRefreshDelegate!
     
     private var state: ADChromePullToRefreshState = ADChromePullToRefreshState.Stopped {
         didSet {
@@ -32,14 +32,13 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     
     private let scrollViewOriginalTopInset: CGFloat
     private let scrollViewOriginalOffsetY: CGFloat
-    private let scrollViewOffsetYDeltaForOneAlpha: CGFloat = 80
-    private let scrollViewOffsetYDeltaForTopViewZeroAlpha: CGFloat = 20
-    private let pullToRefreshTreschold: CGFloat = -90.0
+    private let scrollViewOffsetYDeltaForOneAlpha: CGFloat = 60
+    private let scrollViewOffsetYDeltaForTopViewZeroAlpha: CGFloat = 15
+    private let pullToRefreshTreschold: CGFloat = -70.0
     
     private var context = "com.antondomashnev.ADChromePullToRefresh.KVOContext"
     private var isObserved: Bool = false
     private var isPanGestureHandlerAdded: Bool = false
-    private var lastObservedOffsetY: CGFloat = 0.0
     
     private var pullToRefreshStartPanGestureX: CGFloat = 0.0
     private var pullToRefreshScrollProgress: CGFloat = 0.0 {
@@ -247,7 +246,6 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
         let newOffsetY = self.scrollView.contentOffset.y
         self.updateViewsWithNewOffsetY(newOffsetY)
         self.updateStateWithNewOffsetY(newOffsetY)
-        self.lastObservedOffsetY = newOffsetY
     }
     
     //MARK: - UI

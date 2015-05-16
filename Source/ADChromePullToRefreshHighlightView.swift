@@ -43,7 +43,7 @@ class ADChromePullToRefreshHighlightView: UIView {
     }
     
     private func updateDeltaXForStretchingSide(deltaX: CGFloat) -> CGFloat {
-        return fabs(deltaX) / 4
+        return fabs(deltaX) / 3
     }
     
     private func updateDeltaXForOppositeStretchingSide(deltaX: CGFloat) -> CGFloat {
@@ -174,13 +174,16 @@ class ADChromePullToRefreshHighlightView: UIView {
         self.highlightedX = x
         self.highlighting = true
         
+        var duration: NSTimeInterval = 0
         var startCGPath: CGPath? = nil
         var endCGPath: CGPath? = nil
         if (!self.highlighted) {
             startCGPath = self.zeroCirclePath().CGPath
             endCGPath = self.normalCirclePath().CGPath
+            duration = 0.3
         }
         else {
+            duration = 0.2
             startCGPath = self.highlightLayer.path
             if oldHighlightedX > x {
                 endCGPath = self.highlightedCirclePathIfTransformedFromRightToLeft().CGPath
@@ -195,7 +198,7 @@ class ADChromePullToRefreshHighlightView: UIView {
         
         let animation = CABasicAnimation(keyPath: "path")
         animation.toValue =  endCGPath!
-        animation.duration = 0.3
+        animation.duration = duration
         animation.delegate = self
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         animation.fillMode = kCAFillModeForwards
