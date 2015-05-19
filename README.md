@@ -45,4 +45,4 @@ func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, viewWithType: ADC
 Adding ADChromePullToRefresh to your project
 ====================================
 
-Add `pod 'ADDropDownMenuView' '~> 1.0.0'` (i hope it will be merged soon =)) to your Podfile.
+Add `pod 'ADChromePullToRefresh'` to your Podfile.
