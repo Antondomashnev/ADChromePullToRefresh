@@ -24,11 +24,11 @@ class ADChromePullToRefreshHighlightView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.translatesAutoresizingMaskIntoConstraints = false
         self.addHighlightLayer()
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -51,7 +51,7 @@ class ADChromePullToRefreshHighlightView: UIView {
     }
     
     private func highlightedCirclePathIfTransformedFromLeftToRight() -> UIBezierPath {
-        var newPath = UIBezierPath()
+        let newPath = UIBezierPath()
         let normalTopPoint = CGPoint(x: self.highlightedX, y: self.highlightLayerYForHeight(self.highlightLayerMaximumRadius * 2))
         let normalBottomPoint = CGPoint(x: self.highlightedX, y: normalTopPoint.y + self.highlightLayerMaximumRadius * 2)
         
@@ -69,7 +69,7 @@ class ADChromePullToRefreshHighlightView: UIView {
     }
     
     private func highlightedCirclePathIfTransformedFromRightToLeft() -> UIBezierPath {
-        var newPath = UIBezierPath()
+        let newPath = UIBezierPath()
         let normalTopPoint = CGPoint(x: self.highlightedX, y: self.highlightLayerYForHeight(self.highlightLayerMaximumRadius * 2))
         let normalBottomPoint = CGPoint(x: self.highlightedX, y: normalTopPoint.y + self.highlightLayerMaximumRadius * 2)
         
@@ -101,7 +101,7 @@ class ADChromePullToRefreshHighlightView: UIView {
     
     private func zeroCirclePath() -> UIBezierPath {
         let startOrigin = CGPoint(x: self.highlightedX, y: self.highlightLayerYForHeight(0.0))
-        let startPath = UIBezierPath(roundedRect: CGRect(origin: startOrigin, size: CGSize.zeroSize), cornerRadius: 1)
+        let startPath = UIBezierPath(roundedRect: CGRect(origin: startOrigin, size: CGSize.zero), cornerRadius: 1)
         return startPath
     }
     
@@ -116,10 +116,10 @@ class ADChromePullToRefreshHighlightView: UIView {
     
     //MARK: - CABasicAnimationDelegate
     
-    override func animationDidStop(anim: CAAnimation!, finished flag: Bool) {
+    override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
         if self.highlightLayer.animationForKey("resetAnimation") != nil && anim == self.highlightLayer.animationForKey("resetAnimation") {
             self.highlightLayer.removeAllAnimations()
-            self.highlightLayer.path = UIBezierPath(rect: CGRect.zeroRect).CGPath
+            self.highlightLayer.path = UIBezierPath(rect: CGRect.zero).CGPath
             self.resetting = false
         }
         else if self.highlightLayer.animationForKey("highlightAnimation") != nil &&  anim == self.highlightLayer.animationForKey("highlightAnimation") {
@@ -137,7 +137,6 @@ class ADChromePullToRefreshHighlightView: UIView {
         self.resetting = true
         
         let endPath = self.bigCirclePath()
-        let startPath = UIBezierPath(CGPath: self.highlightLayer.path)
         
         let animationGroup = CAAnimationGroup()
         animationGroup.fillMode = kCAFillModeForwards
@@ -217,7 +216,6 @@ class ADChromePullToRefreshHighlightView: UIView {
         let normalTop = self.highlightLayerYForHeight(self.highlightLayerMaximumRadius * 2)
         let normalBottom = normalTop + self.highlightLayerMaximumRadius * 2
         
-        let centerY = normalTop + self.highlightLayerMaximumRadius
         if x >= -minimumDeltaXToStartStretching && x <= minimumDeltaXToStartStretching {
             self.highlightLayer.removeAllAnimations()
             self.highlightLayer.opacity = 1
@@ -227,7 +225,7 @@ class ADChromePullToRefreshHighlightView: UIView {
             self.highlightLayer.removeAllAnimations()
             
             let updatedX = x + minimumDeltaXToStartStretching
-            var newPath = UIBezierPath()
+            let newPath = UIBezierPath()
             let newX = self.highlightedX - self.updateDeltaXForCenter(updatedX)
             let updatedTopPoint = CGPoint(x: newX, y: normalTop)
             let updatedBottomPoint = CGPoint(x: newX, y: normalBottom)
@@ -250,7 +248,7 @@ class ADChromePullToRefreshHighlightView: UIView {
             self.highlightLayer.removeAllAnimations()
             
             let updatedX = x - minimumDeltaXToStartStretching
-            var newPath = UIBezierPath()
+            let newPath = UIBezierPath()
             let newX = self.highlightedX + self.updateDeltaXForCenter(updatedX)
             let updatedTopPoint = CGPoint(x: newX, y: normalTop)
             let updatedBottomPoint = CGPoint(x: newX, y: normalBottom)

@@ -17,12 +17,12 @@ class ADChromePullToRefreshActionView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.translatesAutoresizingMaskIntoConstraints = false
         self.addIconView()
         self.createIconMaskView()
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -44,7 +44,7 @@ class ADChromePullToRefreshActionView: UIView {
     private func addIconView() {
         self.iconView = UIView(frame: self.bounds)
         self.iconView.backgroundColor = UIColor.blackColor()
-        self.iconView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.iconView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(self.iconView)
     }
     
@@ -78,9 +78,9 @@ class ADChromePullToRefreshActionView: UIView {
 
     func setUpConstraints() {
         let viewsDictionary = ["iconView" : self.iconView]
-        let horizontalConstraints: NSArray = NSLayoutConstraint.constraintsWithVisualFormat("H:|[iconView]|", options: NSLayoutFormatOptions(0), metrics: nil, views: viewsDictionary)
-        self.addConstraints(horizontalConstraints as [AnyObject])
-        let verticalConstraints: NSArray = NSLayoutConstraint.constraintsWithVisualFormat("V:|[iconView]|", options: NSLayoutFormatOptions(0), metrics: nil, views: viewsDictionary)
-        self.addConstraints(verticalConstraints as [AnyObject])
+        let horizontalConstraints: NSArray = NSLayoutConstraint.constraintsWithVisualFormat("H:|[iconView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+        self.addConstraints(horizontalConstraints as! [NSLayoutConstraint])
+        let verticalConstraints: NSArray = NSLayoutConstraint.constraintsWithVisualFormat("V:|[iconView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+        self.addConstraints(verticalConstraints as! [NSLayoutConstraint])
     }
 }
