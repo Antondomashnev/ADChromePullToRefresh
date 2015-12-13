@@ -11,12 +11,11 @@ import UIKit
 protocol ADChromePullToRefreshViewDelegate: NSObjectProtocol {
     func chromePullToRefreshViewDidChangeHighlightedView(newHighlightedActionViewType: ADChromePullToRefreshActionViewType?)
     func chromePullToRefreshView(view: ADChromePullToRefreshView, actionViewWithType type: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView
-    
 }
 
 class ADChromePullToRefreshView: UIView {
     
-    weak var delegate: ADChromePullToRefreshViewDelegate?
+    weak var delegate: ADChromePullToRefreshViewDelegate!
     
     private var leftActionViewHeightConstraint: NSLayoutConstraint!
     private var rightActionViewHeightConstraint: NSLayoutConstraint!
@@ -41,14 +40,14 @@ class ADChromePullToRefreshView: UIView {
         self.commonInit()
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.commonInit()
     }
     
     private func commonInit() {
         self.clipsToBounds = true
-        self.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = UIColor(red: 250.0/255.0, green: 250.0/255.0, blue: 250.0/255.0, alpha: 1.0)
         self.addHighlightView()
         self.addCenterActionView()
@@ -163,8 +162,8 @@ class ADChromePullToRefreshView: UIView {
         let horizontalMargin = (self.bounds.width - self.viewsSize.width * 3 - self.leftActionLeftMargin - self.rightActionRightMargin) / 2
         let viewsDictionary = ["refreshView" : self.centerActionView, "leftActionView" : self.leftActionView, "rightActionView" : self.rightActionView, "highlightView": self.highlightView]
         let metricsDictionary = ["leftActionLeft": self.leftActionLeftMargin, "rightActionRight": self.rightActionRightMargin, "viewsMargin": horizontalMargin, "viewWidth": self.viewsSize.width, "viewHeight": self.viewsSize.height, "verticalMargin": verticalMargin]
-        let horizontalConstraints: NSArray = NSLayoutConstraint.constraintsWithVisualFormat("|-(leftActionLeft)-[leftActionView(viewWidth)]-(viewsMargin)-[refreshView(viewWidth)]-(viewsMargin)-[rightActionView(viewWidth)]-(rightActionRight)-|", options: NSLayoutFormatOptions(0), metrics: metricsDictionary as [NSObject : AnyObject], views: viewsDictionary)
-        self.addConstraints(horizontalConstraints as [AnyObject])
+        let horizontalConstraints: [NSLayoutConstraint] = NSLayoutConstraint.constraintsWithVisualFormat("|-(leftActionLeft)-[leftActionView(viewWidth)]-(viewsMargin)-[refreshView(viewWidth)]-(viewsMargin)-[rightActionView(viewWidth)]-(rightActionRight)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: metricsDictionary as [String : AnyObject], views: viewsDictionary)
+        self.addConstraints(horizontalConstraints)
         
         let actionViews = [self.centerActionView, self.leftActionView, self.rightActionView]
         for actionView in actionViews {
@@ -183,8 +182,8 @@ class ADChromePullToRefreshView: UIView {
             actionView.setUpConstraints()
         }
         
-        let highlightHorizontalConstraints: NSArray = NSLayoutConstraint.constraintsWithVisualFormat("H:|[highlightView]|", options: NSLayoutFormatOptions(0), metrics: nil, views: viewsDictionary)
-        self.addConstraints(highlightHorizontalConstraints as [AnyObject])
+        let highlightHorizontalConstraints: [NSLayoutConstraint] = NSLayoutConstraint.constraintsWithVisualFormat("H:|[highlightView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+        self.addConstraints(highlightHorizontalConstraints)
         self.addConstraint(self.centerYConstraintForView(self.highlightView))
         self.addConstraint(self.heightConstraintForHighlightView(self.highlightView))
         

@@ -18,7 +18,7 @@ protocol ADChromePullToRefreshDelegate: NSObjectProtocol {
 
 class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     
-    weak var delegate: ADChromePullToRefreshDelegate?
+    weak var delegate: ADChromePullToRefreshDelegate!
     
     private var state: ADChromePullToRefreshState = ADChromePullToRefreshState.Stopped {
         didSet {
@@ -32,14 +32,13 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     
     private let scrollViewOriginalTopInset: CGFloat
     private let scrollViewOriginalOffsetY: CGFloat
-    private let scrollViewOffsetYDeltaForOneAlpha: CGFloat = 80
-    private let scrollViewOffsetYDeltaForTopViewZeroAlpha: CGFloat = 20
-    private let pullToRefreshTreschold: CGFloat = -90.0
+    private let scrollViewOffsetYDeltaForOneAlpha: CGFloat = 60
+    private let scrollViewOffsetYDeltaForTopViewZeroAlpha: CGFloat = 15
+    private let pullToRefreshTreschold: CGFloat = -70.0
     
     private var context = "com.antondomashnev.ADChromePullToRefresh.KVOContext"
     private var isObserved: Bool = false
     private var isPanGestureHandlerAdded: Bool = false
-    private var lastObservedOffsetY: CGFloat = 0.0
     
     private var pullToRefreshStartPanGestureX: CGFloat = 0.0
     private var pullToRefreshScrollProgress: CGFloat = 0.0 {
@@ -111,10 +110,10 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     
     func setUpConstraints() {
         let viewsDictionary = ["pullToRefresh" : self.pullToRefreshView]
-        let horizontalConstraints: NSArray = NSLayoutConstraint.constraintsWithVisualFormat("H:|[pullToRefresh]|", options: NSLayoutFormatOptions(0), metrics: nil, views: viewsDictionary)
-        self.pullToRefreshSuperview.addConstraints(horizontalConstraints as [AnyObject])
-        let verticalConstraints: NSArray = NSLayoutConstraint.constraintsWithVisualFormat("V:|[pullToRefresh]", options: NSLayoutFormatOptions(0), metrics: nil, views: viewsDictionary)
-        self.pullToRefreshSuperview.addConstraints(verticalConstraints as [AnyObject])
+        let horizontalConstraints: [NSLayoutConstraint] = NSLayoutConstraint.constraintsWithVisualFormat("H:|[pullToRefresh]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+        self.pullToRefreshSuperview.addConstraints(horizontalConstraints)
+        let verticalConstraints: [NSLayoutConstraint] = NSLayoutConstraint.constraintsWithVisualFormat("V:|[pullToRefresh]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+        self.pullToRefreshSuperview.addConstraints(verticalConstraints)
         
         self.pullToRefreshViewHeightConstraint = NSLayoutConstraint(item: self.pullToRefreshView, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1.0, constant: self.topView.bounds.height)
         self.pullToRefreshView.addConstraint(self.pullToRefreshViewHeightConstraint)
@@ -195,7 +194,7 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     }
     
     func updateStateWithNewOffsetY(offsetY: CGFloat) {
-        var scrollOffsetThreshold: CGFloat = self.scrollViewOriginalTopInset + pullToRefreshTreschold
+        let scrollOffsetThreshold: CGFloat = self.scrollViewOriginalTopInset + pullToRefreshTreschold
         let dragging = self.scrollView.dragging
             if self.state == .Loading {
                 return
@@ -236,7 +235,7 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     
     //MARK: - KVO
     
-    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if context != &self.context {
             return
         }
@@ -247,7 +246,6 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
         let newOffsetY = self.scrollView.contentOffset.y
         self.updateViewsWithNewOffsetY(newOffsetY)
         self.updateStateWithNewOffsetY(newOffsetY)
-        self.lastObservedOffsetY = newOffsetY
     }
     
     //MARK: - UI

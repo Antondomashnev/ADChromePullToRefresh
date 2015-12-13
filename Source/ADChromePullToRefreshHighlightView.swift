@@ -24,11 +24,11 @@ class ADChromePullToRefreshHighlightView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.translatesAutoresizingMaskIntoConstraints = false
         self.addHighlightLayer()
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -43,7 +43,7 @@ class ADChromePullToRefreshHighlightView: UIView {
     }
     
     private func updateDeltaXForStretchingSide(deltaX: CGFloat) -> CGFloat {
-        return fabs(deltaX) / 4
+        return fabs(deltaX) / 3
     }
     
     private func updateDeltaXForOppositeStretchingSide(deltaX: CGFloat) -> CGFloat {
@@ -51,7 +51,7 @@ class ADChromePullToRefreshHighlightView: UIView {
     }
     
     private func highlightedCirclePathIfTransformedFromLeftToRight() -> UIBezierPath {
-        var newPath = UIBezierPath()
+        let newPath = UIBezierPath()
         let normalTopPoint = CGPoint(x: self.highlightedX, y: self.highlightLayerYForHeight(self.highlightLayerMaximumRadius * 2))
         let normalBottomPoint = CGPoint(x: self.highlightedX, y: normalTopPoint.y + self.highlightLayerMaximumRadius * 2)
         
@@ -69,7 +69,7 @@ class ADChromePullToRefreshHighlightView: UIView {
     }
     
     private func highlightedCirclePathIfTransformedFromRightToLeft() -> UIBezierPath {
-        var newPath = UIBezierPath()
+        let newPath = UIBezierPath()
         let normalTopPoint = CGPoint(x: self.highlightedX, y: self.highlightLayerYForHeight(self.highlightLayerMaximumRadius * 2))
         let normalBottomPoint = CGPoint(x: self.highlightedX, y: normalTopPoint.y + self.highlightLayerMaximumRadius * 2)
         
@@ -101,7 +101,7 @@ class ADChromePullToRefreshHighlightView: UIView {
     
     private func zeroCirclePath() -> UIBezierPath {
         let startOrigin = CGPoint(x: self.highlightedX, y: self.highlightLayerYForHeight(0.0))
-        let startPath = UIBezierPath(roundedRect: CGRect(origin: startOrigin, size: CGSize.zeroSize), cornerRadius: 1)
+        let startPath = UIBezierPath(roundedRect: CGRect(origin: startOrigin, size: CGSize.zero), cornerRadius: 1)
         return startPath
     }
     
@@ -116,10 +116,10 @@ class ADChromePullToRefreshHighlightView: UIView {
     
     //MARK: - CABasicAnimationDelegate
     
-    override func animationDidStop(anim: CAAnimation!, finished flag: Bool) {
+    override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
         if self.highlightLayer.animationForKey("resetAnimation") != nil && anim == self.highlightLayer.animationForKey("resetAnimation") {
             self.highlightLayer.removeAllAnimations()
-            self.highlightLayer.path = UIBezierPath(rect: CGRect.zeroRect).CGPath
+            self.highlightLayer.path = UIBezierPath(rect: CGRect.zero).CGPath
             self.resetting = false
         }
         else if self.highlightLayer.animationForKey("highlightAnimation") != nil &&  anim == self.highlightLayer.animationForKey("highlightAnimation") {
@@ -137,7 +137,6 @@ class ADChromePullToRefreshHighlightView: UIView {
         self.resetting = true
         
         let endPath = self.bigCirclePath()
-        let startPath = UIBezierPath(CGPath: self.highlightLayer.path)
         
         let animationGroup = CAAnimationGroup()
         animationGroup.fillMode = kCAFillModeForwards
@@ -174,13 +173,16 @@ class ADChromePullToRefreshHighlightView: UIView {
         self.highlightedX = x
         self.highlighting = true
         
+        var duration: NSTimeInterval = 0
         var startCGPath: CGPath? = nil
         var endCGPath: CGPath? = nil
         if (!self.highlighted) {
             startCGPath = self.zeroCirclePath().CGPath
             endCGPath = self.normalCirclePath().CGPath
+            duration = 0.3
         }
         else {
+            duration = 0.2
             startCGPath = self.highlightLayer.path
             if oldHighlightedX > x {
                 endCGPath = self.highlightedCirclePathIfTransformedFromRightToLeft().CGPath
@@ -195,7 +197,7 @@ class ADChromePullToRefreshHighlightView: UIView {
         
         let animation = CABasicAnimation(keyPath: "path")
         animation.toValue =  endCGPath!
-        animation.duration = 0.3
+        animation.duration = duration
         animation.delegate = self
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         animation.fillMode = kCAFillModeForwards
@@ -214,7 +216,6 @@ class ADChromePullToRefreshHighlightView: UIView {
         let normalTop = self.highlightLayerYForHeight(self.highlightLayerMaximumRadius * 2)
         let normalBottom = normalTop + self.highlightLayerMaximumRadius * 2
         
-        let centerY = normalTop + self.highlightLayerMaximumRadius
         if x >= -minimumDeltaXToStartStretching && x <= minimumDeltaXToStartStretching {
             self.highlightLayer.removeAllAnimations()
             self.highlightLayer.opacity = 1
@@ -224,7 +225,7 @@ class ADChromePullToRefreshHighlightView: UIView {
             self.highlightLayer.removeAllAnimations()
             
             let updatedX = x + minimumDeltaXToStartStretching
-            var newPath = UIBezierPath()
+            let newPath = UIBezierPath()
             let newX = self.highlightedX - self.updateDeltaXForCenter(updatedX)
             let updatedTopPoint = CGPoint(x: newX, y: normalTop)
             let updatedBottomPoint = CGPoint(x: newX, y: normalBottom)
@@ -247,7 +248,7 @@ class ADChromePullToRefreshHighlightView: UIView {
             self.highlightLayer.removeAllAnimations()
             
             let updatedX = x - minimumDeltaXToStartStretching
-            var newPath = UIBezierPath()
+            let newPath = UIBezierPath()
             let newX = self.highlightedX + self.updateDeltaXForCenter(updatedX)
             let updatedTopPoint = CGPoint(x: newX, y: normalTop)
             let updatedBottomPoint = CGPoint(x: newX, y: normalBottom)

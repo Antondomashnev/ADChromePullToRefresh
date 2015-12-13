@@ -17,8 +17,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.topView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.topView.translatesAutoresizingMaskIntoConstraints = false
         self.addPullToRefresh()
     }
     
@@ -34,7 +34,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func triggerPullToRefresh() -> Void {
-        println("center action handled")
+        print("center action handled")
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1.5 * Double(NSEC_PER_SEC)))
         dispatch_after(delayTime, dispatch_get_main_queue()) {
             self.pullToRefresh.completePullToRefresh()
@@ -42,11 +42,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func triggerLeftAction() -> Void {
-        println("left action handled")
+        print("left action handled")
     }
     
     func triggerRightAction() -> Void {
-        println("right action handled")
+        print("right action handled")
     }
     
     //MARK: - ADChromePullToRefresh
@@ -97,7 +97,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell: UITableViewCell? = tableView.dequeueReusableCellWithIdentifier("cellIdentifier") as? UITableViewCell
+        var cell: UITableViewCell? = tableView.dequeueReusableCellWithIdentifier("cellIdentifier")
         if cell == nil {
             cell = UITableViewCell(style: .Default, reuseIdentifier: "cellIdentifier")
         }
