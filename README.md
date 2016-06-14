@@ -44,8 +44,15 @@ func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, actionForViewWith
 func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, viewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView
 ```
 
-------------------------------------
-Adding ADChromePullToRefresh to your project
-====================================
+## Easy to install
 
-Add `pod 'ADChromePullToRefresh'` to your Podfile.
+### CocoaPods
+
+To integrate ADPuzzleAnimation into your Xcode project using CocoaPods, specify it in your `Podfile`:
+
+```ruby
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.0'
+use_frameworks!
+
+pod 'ADChromePullToRefresh', '~> 0.5'
