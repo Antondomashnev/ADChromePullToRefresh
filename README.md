@@ -8,11 +8,9 @@ Inspire by this dribble and Google Chrome iOS app
 
 <img src="https://d13yacurqjgara.cloudfront.net/users/21258/screenshots/2022862/attachments/357920/animation.gif" width="320" /> <img src="http://i.imgur.com/ofGGbQs.gif" width="320" />
 
------
-Usage
-=====
+## Easy to use
 
-For the example of usage see viewController.swift file in demo project
+You can simply setup your own chrome style pull to refresh using the initializer below
 
 ```swift
 /*
@@ -25,7 +23,7 @@ For the example of usage see viewController.swift file in demo project
 init(view: UIView, forScrollView scrollView: UIScrollView, scrollViewOriginalOffsetY: CGFloat, delegate: ADChromePullToRefreshDelegate) 
 ```
 
-You must implement two delegate functions
+To provide custom handler for pull to refresh actions you need to implement this delegate methos in your class
 
 ```swift
 /*
@@ -33,6 +31,8 @@ You must implement two delegate functions
  */
 func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, actionForViewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshAction?
 ```
+
+You're able to customize pull to refresh action view according to your needs 🚀
 
 ```swift
 /*
