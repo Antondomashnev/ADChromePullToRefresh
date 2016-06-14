@@ -1,4 +1,7 @@
 # ADChromePullToRefresh
+
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/ADChromePullToRefresh.svg)](https://img.shields.io/cocoapods/v/ADChromePullToRefresh.svg)
+
 Yet another custom pull to refresh for your needs.
 
 Inspire by this dribble and Google Chrome iOS app
