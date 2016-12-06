@@ -109,7 +109,7 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     }
     
     func setUpConstraints() {
-        let viewsDictionary = ["pullToRefresh" : self.pullToRefreshView]
+        let viewsDictionary: [String : ADChromePullToRefreshView] = ["pullToRefresh" : self.pullToRefreshView]
         let horizontalConstraints: [NSLayoutConstraint] = NSLayoutConstraint.constraints(withVisualFormat: "H:|[pullToRefresh]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
         self.pullToRefreshSuperview.addConstraints(horizontalConstraints)
         let verticalConstraints: [NSLayoutConstraint] = NSLayoutConstraint.constraints(withVisualFormat: "V:|[pullToRefresh]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)

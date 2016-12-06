@@ -77,7 +77,7 @@ class ADChromePullToRefreshActionView: UIView {
     }
 
     func setUpConstraints() {
-        let viewsDictionary = ["iconView" : self.iconView]
+        let viewsDictionary: [String : UIView] = ["iconView" : self.iconView]
         let horizontalConstraints: NSArray = NSLayoutConstraint.constraints(withVisualFormat: "H:|[iconView]|", options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary) as NSArray
         self.addConstraints(horizontalConstraints as! [NSLayoutConstraint])
         let verticalConstraints: NSArray = NSLayoutConstraint.constraints(withVisualFormat: "V:|[iconView]|", options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary) as NSArray

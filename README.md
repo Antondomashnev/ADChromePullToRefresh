@@ -20,7 +20,7 @@ You can simply setup your own chrome style pull to refresh using the initializer
  * @param scrollViewOriginalOffsetY - initial offset y of the given scrollView
  * @param delegate - object conformed to ADChromePullToRefreshDelegate protocol
  */
-init(view: UIView, forScrollView scrollView: UIScrollView, scrollViewOriginalOffsetY: CGFloat, delegate: ADChromePullToRefreshDelegate) 
+init(view: UIView, forScrollView scrollView: UIScrollView, scrollViewOriginalOffsetY: CGFloat, delegate: ADChromePullToRefreshDelegate)
 ```
 
 To provide custom handler for pull to refresh actions you need to implement this delegate methos in your class
@@ -29,7 +29,7 @@ To provide custom handler for pull to refresh actions you need to implement this
 /*
  * Use this function to provide an action for the given action view type
  */
-func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, actionForViewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshAction?
+func chromePullToRefresh(_ pullToRefresh: ADChromePullToRefresh, actionForViewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshAction?
 ```
 
 You're able to customize pull to refresh action view according to your needs ðŸš€
@@ -41,7 +41,7 @@ You're able to customize pull to refresh action view according to your needs ðŸš
  * @see ADChromePullToRefreshActionView.swift
  * @see UITableViewDelegate - similar method to get header and footer view
  */
-func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, viewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView
+func chromePullToRefresh(_ pullToRefresh: ADChromePullToRefresh, viewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView
 ```
 
 ## Easy to install

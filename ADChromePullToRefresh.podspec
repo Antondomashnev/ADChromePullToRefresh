@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "ADChromePullToRefresh"
-  s.version          = "0.5.0"
+  s.version          = "1.0.0"
   s.summary          = "Google Chrome iOS app pull to refresh"
   s.description      = <<-DESC
                        Yet another pull to refresh for your needs
