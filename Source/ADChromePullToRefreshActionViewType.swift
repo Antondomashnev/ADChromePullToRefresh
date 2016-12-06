@@ -9,7 +9,7 @@
 import Foundation
 
 enum ADChromePullToRefreshActionViewType {
-    case Left
-    case Center
-    case Right
+    case left
+    case center
+    case right
 }

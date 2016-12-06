@@ -13,7 +13,7 @@ class ADChromePullToRefreshActionView: UIView {
     var iconView: UIView!
     var iconMaskView: UIImageView!
     
-    private var highlighted: Bool! = false
+    fileprivate var highlighted: Bool! = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -31,26 +31,26 @@ class ADChromePullToRefreshActionView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.iconMaskView.frame = self.bounds
-        self.iconView.maskView = self.iconMaskView
+        self.iconView.mask = self.iconMaskView
     }
     
     //MARK: - UI
     
-    private func createIconMaskView() {
+    fileprivate func createIconMaskView() {
         self.iconMaskView = UIImageView(frame: self.bounds)
-        self.iconMaskView.contentMode = .ScaleAspectFill
+        self.iconMaskView.contentMode = .scaleAspectFill
     }
     
-    private func addIconView() {
+    fileprivate func addIconView() {
         self.iconView = UIView(frame: self.bounds)
-        self.iconView.backgroundColor = UIColor.blackColor()
+        self.iconView.backgroundColor = UIColor.black
         self.iconView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(self.iconView)
     }
     
     //MARK: - Interface
     
-    func updateWithScrollProgress(scrollProgress: CGFloat) {
+    func updateWithScrollProgress(_ scrollProgress: CGFloat) {
         //to override
     }
     
@@ -58,29 +58,29 @@ class ADChromePullToRefreshActionView: UIView {
         return self.highlighted
     }
     
-    func setHighighted(highlighted: Bool) {
+    func setHighighted(_ highlighted: Bool) {
         if self.highlighted == highlighted {
             return
         }
         
         self.highlighted = highlighted
         if highlighted {
-            UIView.animateWithDuration(0.15, animations: { () in
-                self.iconView.backgroundColor = UIColor.whiteColor()
+            UIView.animate(withDuration: 0.15, animations: { () in
+                self.iconView.backgroundColor = UIColor.white
             })
         }
         else {
-            UIView.animateWithDuration(0.15, animations: { () in
-                self.iconView.backgroundColor = UIColor.blackColor()
+            UIView.animate(withDuration: 0.15, animations: { () in
+                self.iconView.backgroundColor = UIColor.black
             })
         }
     }
 
     func setUpConstraints() {
         let viewsDictionary = ["iconView" : self.iconView]
-        let horizontalConstraints: NSArray = NSLayoutConstraint.constraintsWithVisualFormat("H:|[iconView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+        let horizontalConstraints: NSArray = NSLayoutConstraint.constraints(withVisualFormat: "H:|[iconView]|", options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary) as NSArray
         self.addConstraints(horizontalConstraints as! [NSLayoutConstraint])
-        let verticalConstraints: NSArray = NSLayoutConstraint.constraintsWithVisualFormat("V:|[iconView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+        let verticalConstraints: NSArray = NSLayoutConstraint.constraints(withVisualFormat: "V:|[iconView]|", options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary) as NSArray
         self.addConstraints(verticalConstraints as! [NSLayoutConstraint])
     }
 }

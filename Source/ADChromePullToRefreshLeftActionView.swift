@@ -10,24 +10,24 @@ import UIKit
 
 class ADChromePullToRefreshLeftActionView: ADChromePullToRefreshActionView {
 
-    private let zeroAlphaScrollProgress: CGFloat = 0.6
-    private let oneAlphaScrollProgress: CGFloat = 0.9
-    private let initialTranslateX: CGFloat = 40
+    fileprivate let zeroAlphaScrollProgress: CGFloat = 0.6
+    fileprivate let oneAlphaScrollProgress: CGFloat = 0.9
+    fileprivate let initialTranslateX: CGFloat = 40
     
     //MARK: - Interface
     
-    override func updateWithScrollProgress(scrollProgress: CGFloat) {
+    override func updateWithScrollProgress(_ scrollProgress: CGFloat) {
         let newAlpha = min(1, (scrollProgress - zeroAlphaScrollProgress) / (oneAlphaScrollProgress - zeroAlphaScrollProgress))
         self.alpha = newAlpha
         
         let newTranslateX = initialTranslateX - (initialTranslateX * scrollProgress)
-        self.iconView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, newTranslateX, 0)
+        self.iconView.transform = CGAffineTransform.identity.translatedBy(x: newTranslateX, y: 0)
     }
     
     class func leftActionView() -> ADChromePullToRefreshLeftActionView {
         let view = ADChromePullToRefreshLeftActionView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         view.iconMaskView.image = UIImage(named: "ic_add_black")
-        view.iconView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, view.initialTranslateX, 0)
+        view.iconView.transform = CGAffineTransform.identity.translatedBy(x: view.initialTranslateX, y: 0)
         return view
     }
 

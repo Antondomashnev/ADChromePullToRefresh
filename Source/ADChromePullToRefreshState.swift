@@ -9,7 +9,7 @@
 import Foundation
 
 enum ADChromePullToRefreshState {
-    case Stopped
-    case Triggered
-    case Loading
+    case stopped
+    case triggered
+    case loading
 }

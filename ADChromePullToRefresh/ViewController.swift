@@ -10,10 +10,10 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ADChromePullToRefreshDelegate {
     
-    @IBOutlet private var tableView: UITableView!
-    @IBOutlet private var topView: UIView!
+    @IBOutlet fileprivate var tableView: UITableView!
+    @IBOutlet fileprivate var topView: UIView!
     
-    private var pullToRefresh: ADChromePullToRefresh!
+    fileprivate var pullToRefresh: ADChromePullToRefresh!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +22,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.addPullToRefresh()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setUpConstraints()
     }
@@ -35,8 +35,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func triggerPullToRefresh() -> Void {
         print("center action handled")
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1.5 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             self.pullToRefresh.completePullToRefresh()
         }
     }
@@ -57,15 +56,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     //MARK: - ADChromePullToRefreshDelegate
     
-    func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, viewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView {
+    func chromePullToRefresh(_ pullToRefresh: ADChromePullToRefresh, viewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView {
         switch viewWithType {
-        case .Center: return ADChromePullToRefreshCenterActionView.centerActionView()
-        case .Left: return ADChromePullToRefreshLeftActionView.leftActionView()
-        case .Right: return ADChromePullToRefreshRightActionView.rightActionView()
+        case .center: return ADChromePullToRefreshCenterActionView.centerActionView()
+        case .left: return ADChromePullToRefreshLeftActionView.leftActionView()
+        case .right: return ADChromePullToRefreshRightActionView.rightActionView()
         }
     }
     
-    func chromePullToRefresh(pullToRefresh: ADChromePullToRefresh, actionForViewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshAction? {
+    func chromePullToRefresh(_ pullToRefresh: ADChromePullToRefresh, actionForViewWithType: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshAction? {
         
         let centerAction: ADChromePullToRefreshAction = { () -> Void in
             self.triggerPullToRefresh()
@@ -80,26 +79,26 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
 
         switch actionForViewWithType {
-        case .Center: return centerAction
-        case .Left: return leftAction
-        case .Right: return rightAction
+        case .center: return centerAction
+        case .left: return leftAction
+        case .right: return rightAction
         }
     }
 
     //MARK: - UITableViewDataSource
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 20
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell: UITableViewCell? = tableView.dequeueReusableCellWithIdentifier("cellIdentifier")
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: "cellIdentifier")
         if cell == nil {
-            cell = UITableViewCell(style: .Default, reuseIdentifier: "cellIdentifier")
+            cell = UITableViewCell(style: .default, reuseIdentifier: "cellIdentifier")
         }
         cell?.textLabel?.text = "Title"
         return cell!

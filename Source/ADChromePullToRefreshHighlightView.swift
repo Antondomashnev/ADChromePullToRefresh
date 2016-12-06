@@ -8,19 +8,19 @@
 
 import UIKit
 
-class ADChromePullToRefreshHighlightView: UIView {
+class ADChromePullToRefreshHighlightView: UIView, CAAnimationDelegate {
 
-    private let minimumDeltaXToStartStretching: CGFloat = 30.0
-    private let highlightLayerMaximumRadius: CGFloat = 30.0
-    private let bezierCurveCorrectorValue: CGFloat = 40.2
+    fileprivate let minimumDeltaXToStartStretching: CGFloat = 30.0
+    fileprivate let highlightLayerMaximumRadius: CGFloat = 30.0
+    fileprivate let bezierCurveCorrectorValue: CGFloat = 40.2
     
-    private var highlightLayer: CAShapeLayer!
-    private var higlightLayerFillColor: UIColor = UIColor(red: 72.0/255.0, green: 132.0/255.0, blue: 232.0/255.0, alpha: 1.0)
+    fileprivate var highlightLayer: CAShapeLayer!
+    fileprivate var higlightLayerFillColor: UIColor = UIColor(red: 72.0/255.0, green: 132.0/255.0, blue: 232.0/255.0, alpha: 1.0)
     
-    private var highlightedX: CGFloat = 0
-    private var highlighted: Bool = false
-    private var highlighting: Bool = false
-    private var resetting: Bool = false
+    fileprivate var highlightedX: CGFloat = 0
+    fileprivate var highlighted: Bool = false
+    fileprivate var highlighting: Bool = false
+    fileprivate var resetting: Bool = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,72 +34,72 @@ class ADChromePullToRefreshHighlightView: UIView {
     
     //MARK: - Helpers
     
-    private func highlightLayerYForHeight(height: CGFloat) -> CGFloat {
+    fileprivate func highlightLayerYForHeight(_ height: CGFloat) -> CGFloat {
         return (self.bounds.height - height) / 2
     }
     
-    private func updateDeltaXForCenter(deltaX: CGFloat) -> CGFloat {
+    fileprivate func updateDeltaXForCenter(_ deltaX: CGFloat) -> CGFloat {
         return fabs(deltaX) / 6
     }
     
-    private func updateDeltaXForStretchingSide(deltaX: CGFloat) -> CGFloat {
+    fileprivate func updateDeltaXForStretchingSide(_ deltaX: CGFloat) -> CGFloat {
         return fabs(deltaX) / 3
     }
     
-    private func updateDeltaXForOppositeStretchingSide(deltaX: CGFloat) -> CGFloat {
+    fileprivate func updateDeltaXForOppositeStretchingSide(_ deltaX: CGFloat) -> CGFloat {
         return log(fabs(deltaX) + 1)
     }
     
-    private func highlightedCirclePathIfTransformedFromLeftToRight() -> UIBezierPath {
+    fileprivate func highlightedCirclePathIfTransformedFromLeftToRight() -> UIBezierPath {
         let newPath = UIBezierPath()
         let normalTopPoint = CGPoint(x: self.highlightedX, y: self.highlightLayerYForHeight(self.highlightLayerMaximumRadius * 2))
         let normalBottomPoint = CGPoint(x: self.highlightedX, y: normalTopPoint.y + self.highlightLayerMaximumRadius * 2)
         
-        newPath.moveToPoint(normalTopPoint)
+        newPath.move(to: normalTopPoint)
         
         let rightControlPoint2 = CGPoint(x: self.highlightedX + bezierCurveCorrectorValue, y: normalTopPoint.y)
         let rightControlPoint1 = CGPoint(x: self.highlightedX + bezierCurveCorrectorValue, y: normalBottomPoint.y)
-        newPath.addCurveToPoint(normalBottomPoint, controlPoint1: rightControlPoint2, controlPoint2: rightControlPoint1)
+        newPath.addCurve(to: normalBottomPoint, controlPoint1: rightControlPoint2, controlPoint2: rightControlPoint1)
         
         let leftControlPoint1 = CGPoint(x: self.highlightedX - bezierCurveCorrectorValue, y: normalTopPoint.y)
         let leftControlPoint2 = CGPoint(x: self.highlightedX - bezierCurveCorrectorValue, y: normalBottomPoint.y)
-        newPath.addCurveToPoint(normalTopPoint, controlPoint1: leftControlPoint2, controlPoint2: leftControlPoint1)
+        newPath.addCurve(to: normalTopPoint, controlPoint1: leftControlPoint2, controlPoint2: leftControlPoint1)
         
         return newPath
     }
     
-    private func highlightedCirclePathIfTransformedFromRightToLeft() -> UIBezierPath {
+    fileprivate func highlightedCirclePathIfTransformedFromRightToLeft() -> UIBezierPath {
         let newPath = UIBezierPath()
         let normalTopPoint = CGPoint(x: self.highlightedX, y: self.highlightLayerYForHeight(self.highlightLayerMaximumRadius * 2))
         let normalBottomPoint = CGPoint(x: self.highlightedX, y: normalTopPoint.y + self.highlightLayerMaximumRadius * 2)
         
-        newPath.moveToPoint(normalTopPoint)
+        newPath.move(to: normalTopPoint)
         
         let leftControlPoint1 = CGPoint(x: self.highlightedX - bezierCurveCorrectorValue, y: normalTopPoint.y)
         let leftControlPoint2 = CGPoint(x: self.highlightedX - bezierCurveCorrectorValue, y: normalBottomPoint.y)
-        newPath.addCurveToPoint(normalBottomPoint, controlPoint1: leftControlPoint1, controlPoint2: leftControlPoint2)
+        newPath.addCurve(to: normalBottomPoint, controlPoint1: leftControlPoint1, controlPoint2: leftControlPoint2)
         
         let rightControlPoint2 = CGPoint(x: self.highlightedX + bezierCurveCorrectorValue, y: normalTopPoint.y)
         let rightControlPoint1 = CGPoint(x: self.highlightedX + bezierCurveCorrectorValue, y: normalBottomPoint.y)
-        newPath.addCurveToPoint(normalTopPoint, controlPoint1: rightControlPoint1, controlPoint2: rightControlPoint2)
+        newPath.addCurve(to: normalTopPoint, controlPoint1: rightControlPoint1, controlPoint2: rightControlPoint2)
         
         return newPath
     }
     
-    private func normalCirclePath() -> UIBezierPath {
+    fileprivate func normalCirclePath() -> UIBezierPath {
         let startOrigin = CGPoint(x: self.highlightedX - self.highlightLayerMaximumRadius, y: self.highlightLayerYForHeight(self.highlightLayerMaximumRadius * 2))
         let startPath = UIBezierPath(roundedRect: CGRect(origin: startOrigin, size: CGSize(width: self.highlightLayerMaximumRadius * 2, height: self.highlightLayerMaximumRadius * 2)), cornerRadius: self.highlightLayerMaximumRadius)
         return startPath
     }
     
-    private func bigCirclePath() -> UIBezierPath {
+    fileprivate func bigCirclePath() -> UIBezierPath {
         let newRadius = (max(self.bounds.width - self.highlightedX, self.highlightedX) + 200) / 2.0
         let endOrigin = CGPoint(x: self.highlightedX - newRadius, y: self.highlightLayerYForHeight(newRadius * 2))
         let endPath = UIBezierPath(roundedRect: CGRect(origin: endOrigin, size: CGSize(width: newRadius * 2, height: newRadius * 2)), cornerRadius: newRadius)
         return endPath
     }
     
-    private func zeroCirclePath() -> UIBezierPath {
+    fileprivate func zeroCirclePath() -> UIBezierPath {
         let startOrigin = CGPoint(x: self.highlightedX, y: self.highlightLayerYForHeight(0.0))
         let startPath = UIBezierPath(roundedRect: CGRect(origin: startOrigin, size: CGSize.zero), cornerRadius: 1)
         return startPath
@@ -107,22 +107,22 @@ class ADChromePullToRefreshHighlightView: UIView {
     
     //MARK: - UI
     
-    private func addHighlightLayer() {
+    fileprivate func addHighlightLayer() {
         self.highlightLayer = CAShapeLayer()
-        self.highlightLayer.fillColor = self.higlightLayerFillColor.CGColor
+        self.highlightLayer.fillColor = self.higlightLayerFillColor.cgColor
         self.highlightLayer.anchorPoint = CGPoint(x: 1.0, y: 1.0)
         self.layer.addSublayer(self.highlightLayer)
     }
     
     //MARK: - CABasicAnimationDelegate
     
-    override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
-        if self.highlightLayer.animationForKey("resetAnimation") != nil && anim == self.highlightLayer.animationForKey("resetAnimation") {
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        if self.highlightLayer.animation(forKey: "resetAnimation") != nil && anim == self.highlightLayer.animation(forKey: "resetAnimation") {
             self.highlightLayer.removeAllAnimations()
-            self.highlightLayer.path = UIBezierPath(rect: CGRect.zero).CGPath
+            self.highlightLayer.path = UIBezierPath(rect: CGRect.zero).cgPath
             self.resetting = false
         }
-        else if self.highlightLayer.animationForKey("highlightAnimation") != nil &&  anim == self.highlightLayer.animationForKey("highlightAnimation") {
+        else if self.highlightLayer.animation(forKey: "highlightAnimation") != nil &&  anim == self.highlightLayer.animation(forKey: "highlightAnimation") {
             self.highlighting = false
         }
     }
@@ -140,13 +140,13 @@ class ADChromePullToRefreshHighlightView: UIView {
         
         let animationGroup = CAAnimationGroup()
         animationGroup.fillMode = kCAFillModeForwards
-        animationGroup.removedOnCompletion = false
+        animationGroup.isRemovedOnCompletion = false
         animationGroup.delegate = self
         animationGroup.duration = 0.3
         
         let pathAnimation = CABasicAnimation(keyPath: "path")
         pathAnimation.fromValue = self.highlightLayer.path
-        pathAnimation.toValue = endPath.CGPath
+        pathAnimation.toValue = endPath.cgPath
         pathAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         
         let opacityAnimation = CABasicAnimation(keyPath: "opacity")
@@ -157,14 +157,14 @@ class ADChromePullToRefreshHighlightView: UIView {
         animationGroup.animations = [pathAnimation, opacityAnimation]
         
         self.highlightLayer.opacity = 0
-        self.highlightLayer.path = endPath.CGPath
-        self.highlightLayer.addAnimation(animationGroup, forKey: "resetAnimation")
+        self.highlightLayer.path = endPath.cgPath
+        self.highlightLayer.add(animationGroup, forKey: "resetAnimation")
         
         self.highlighted = false
         self.highlightedX = 0
     }
     
-    func highlightActionViewAtPoint(x: CGFloat) {
+    func highlightActionViewAtPoint(_ x: CGFloat) {
         if self.highlightedX == x {
             return
         }
@@ -173,22 +173,22 @@ class ADChromePullToRefreshHighlightView: UIView {
         self.highlightedX = x
         self.highlighting = true
         
-        var duration: NSTimeInterval = 0
+        var duration: TimeInterval = 0
         var startCGPath: CGPath? = nil
         var endCGPath: CGPath? = nil
         if (!self.highlighted) {
-            startCGPath = self.zeroCirclePath().CGPath
-            endCGPath = self.normalCirclePath().CGPath
+            startCGPath = self.zeroCirclePath().cgPath
+            endCGPath = self.normalCirclePath().cgPath
             duration = 0.3
         }
         else {
             duration = 0.2
             startCGPath = self.highlightLayer.path
             if oldHighlightedX > x {
-                endCGPath = self.highlightedCirclePathIfTransformedFromRightToLeft().CGPath
+                endCGPath = self.highlightedCirclePathIfTransformedFromRightToLeft().cgPath
             }
             else {
-                endCGPath = self.highlightedCirclePathIfTransformedFromLeftToRight().CGPath
+                endCGPath = self.highlightedCirclePathIfTransformedFromLeftToRight().cgPath
             }
         }
         
@@ -201,13 +201,13 @@ class ADChromePullToRefreshHighlightView: UIView {
         animation.delegate = self
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         animation.fillMode = kCAFillModeForwards
-        animation.removedOnCompletion = false
-        self.highlightLayer.addAnimation(animation, forKey: "highlightAnimation")
+        animation.isRemovedOnCompletion = false
+        self.highlightLayer.add(animation, forKey: "highlightAnimation")
         
         self.highlighted = true
     }
     
-    func setDeltaX(x: CGFloat) {
+    func setDeltaX(_ x: CGFloat) {
         
         if self.highlighting || self.resetting {
             return
@@ -219,7 +219,7 @@ class ADChromePullToRefreshHighlightView: UIView {
         if x >= -minimumDeltaXToStartStretching && x <= minimumDeltaXToStartStretching {
             self.highlightLayer.removeAllAnimations()
             self.highlightLayer.opacity = 1
-            self.highlightLayer.path = self.normalCirclePath().CGPath
+            self.highlightLayer.path = self.normalCirclePath().cgPath
         }
         else if x < -minimumDeltaXToStartStretching {
             self.highlightLayer.removeAllAnimations()
@@ -230,19 +230,19 @@ class ADChromePullToRefreshHighlightView: UIView {
             let updatedTopPoint = CGPoint(x: newX, y: normalTop)
             let updatedBottomPoint = CGPoint(x: newX, y: normalBottom)
             
-            newPath.moveToPoint(updatedTopPoint)
+            newPath.move(to: updatedTopPoint)
             
             let stretchingDeltaX = self.updateDeltaXForStretchingSide(updatedX)
             let leftControlPoint1 = CGPoint(x: newX - bezierCurveCorrectorValue - stretchingDeltaX, y: normalTop)
             let leftControlPoint2 = CGPoint(x: newX - bezierCurveCorrectorValue - stretchingDeltaX, y: normalBottom)
-            newPath.addCurveToPoint(updatedBottomPoint, controlPoint1: leftControlPoint1, controlPoint2: leftControlPoint2)
+            newPath.addCurve(to: updatedBottomPoint, controlPoint1: leftControlPoint1, controlPoint2: leftControlPoint2)
             
             let oppositeStretchingDeltaX = self.updateDeltaXForOppositeStretchingSide(updatedX)
             let rightControlPoint2 = CGPoint(x: self.highlightedX + bezierCurveCorrectorValue - oppositeStretchingDeltaX, y: normalTop)
             let rightControlPoint1 = CGPoint(x: self.highlightedX + bezierCurveCorrectorValue - oppositeStretchingDeltaX, y: normalBottom)
-            newPath.addCurveToPoint(updatedTopPoint, controlPoint1: rightControlPoint1, controlPoint2: rightControlPoint2)
+            newPath.addCurve(to: updatedTopPoint, controlPoint1: rightControlPoint1, controlPoint2: rightControlPoint2)
             
-            self.highlightLayer.path = newPath.CGPath
+            self.highlightLayer.path = newPath.cgPath
         }
         else if x > minimumDeltaXToStartStretching {
             self.highlightLayer.removeAllAnimations()
@@ -253,18 +253,18 @@ class ADChromePullToRefreshHighlightView: UIView {
             let updatedTopPoint = CGPoint(x: newX, y: normalTop)
             let updatedBottomPoint = CGPoint(x: newX, y: normalBottom)
             
-            newPath.moveToPoint(updatedTopPoint)
+            newPath.move(to: updatedTopPoint)
             
             let stretchingDeltaX = self.updateDeltaXForStretchingSide(updatedX)
             let leftControlPoint1 = CGPoint(x: newX + bezierCurveCorrectorValue + stretchingDeltaX, y: normalTop)
             let leftControlPoint2 = CGPoint(x: newX + bezierCurveCorrectorValue + stretchingDeltaX, y: normalBottom)
-            newPath.addCurveToPoint(updatedBottomPoint, controlPoint1: leftControlPoint1, controlPoint2: leftControlPoint2)
+            newPath.addCurve(to: updatedBottomPoint, controlPoint1: leftControlPoint1, controlPoint2: leftControlPoint2)
             
             let oppositeStretchingDeltaX = self.updateDeltaXForOppositeStretchingSide(updatedX)
             let rightControlPoint2 = CGPoint(x: self.highlightedX - bezierCurveCorrectorValue + oppositeStretchingDeltaX, y: normalTop)
             let rightControlPoint1 = CGPoint(x: self.highlightedX - bezierCurveCorrectorValue + oppositeStretchingDeltaX, y: normalBottom)
-            newPath.addCurveToPoint(updatedTopPoint, controlPoint1: rightControlPoint1, controlPoint2: rightControlPoint2)
-            self.highlightLayer.path = newPath.CGPath
+            newPath.addCurve(to: updatedTopPoint, controlPoint1: rightControlPoint1, controlPoint2: rightControlPoint2)
+            self.highlightLayer.path = newPath.cgPath
         }
     }
 }
