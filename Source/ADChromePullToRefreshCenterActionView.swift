@@ -8,16 +8,16 @@
 
 import UIKit
 
-class ADChromePullToRefreshCenterActionView: ADChromePullToRefreshActionView {
+public class ADChromePullToRefreshCenterActionView: ADChromePullToRefreshActionView {
 
-    fileprivate let initialIconRotation: CGFloat = (CGFloat)(-M_PI_2 + M_PI_4)
+    fileprivate let initialIconRotation: CGFloat = (CGFloat)(-Double.pi / 2 + Double.pi / 4)
     fileprivate let zeroAlphaScrollProgress: CGFloat = 0.2
     fileprivate let oneAlphaScrollProgress: CGFloat = 0.9
     
     //MARK: - ADChromePullToRefreshActionView
     
     override func updateWithScrollProgress(_ scrollProgress: CGFloat) {
-        let newAngle = self.initialIconRotation + scrollProgress * CGFloat(M_PI_2)
+        let newAngle = self.initialIconRotation + scrollProgress * CGFloat(Double.pi / 2)
         self.iconView.transform = CGAffineTransform.identity.rotated(by: newAngle)
         
         let newAlpha = min(1, (scrollProgress - zeroAlphaScrollProgress) / (oneAlphaScrollProgress - zeroAlphaScrollProgress))

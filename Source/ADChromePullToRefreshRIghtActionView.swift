@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ADChromePullToRefreshRightActionView: ADChromePullToRefreshActionView {
+public class ADChromePullToRefreshRightActionView: ADChromePullToRefreshActionView {
     
     fileprivate let zeroAlphaScrollProgress: CGFloat = 0.6
     fileprivate let oneAlphaScrollProgress: CGFloat = 0.9

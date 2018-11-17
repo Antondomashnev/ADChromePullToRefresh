@@ -16,7 +16,7 @@ protocol ADChromePullToRefreshDelegate: NSObjectProtocol {
 }
 
 
-class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
+public class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     
     weak var delegate: ADChromePullToRefreshDelegate!
     
@@ -90,12 +90,12 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     
     //MARK: - ADChromePullToRefreshViewDelegate
     
-    func chromePullToRefreshViewDidChangeHighlightedView(_ newHighlightedActionViewType: ADChromePullToRefreshActionViewType?) {
+    public func chromePullToRefreshViewDidChangeHighlightedView(_ newHighlightedActionViewType: ADChromePullToRefreshActionViewType?) {
         self.pullToRefreshStartPanGestureX = self.scrollView.panGestureRecognizer.location(in: self.pullToRefreshSuperview).x
         self.highlightedActionViewType = newHighlightedActionViewType
     }
     
-    func chromePullToRefreshView(_ view: ADChromePullToRefreshView, actionViewWithType type: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView {
+    public func chromePullToRefreshView(_ view: ADChromePullToRefreshView, actionViewWithType type: ADChromePullToRefreshActionViewType) -> ADChromePullToRefreshActionView {
         return self.delegate!.chromePullToRefresh(self, viewWithType: type)
     }
     
@@ -110,9 +110,9 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     
     func setUpConstraints() {
         let viewsDictionary: [String : ADChromePullToRefreshView] = ["pullToRefresh" : self.pullToRefreshView]
-        let horizontalConstraints: [NSLayoutConstraint] = NSLayoutConstraint.constraints(withVisualFormat: "H:|[pullToRefresh]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+        let horizontalConstraints: [NSLayoutConstraint] = NSLayoutConstraint.constraints(withVisualFormat: "H:|[pullToRefresh]|", options: NSLayoutConstraint.FormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
         self.pullToRefreshSuperview.addConstraints(horizontalConstraints)
-        let verticalConstraints: [NSLayoutConstraint] = NSLayoutConstraint.constraints(withVisualFormat: "V:|[pullToRefresh]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+        let verticalConstraints: [NSLayoutConstraint] = NSLayoutConstraint.constraints(withVisualFormat: "V:|[pullToRefresh]", options: NSLayoutConstraint.FormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
         self.pullToRefreshSuperview.addConstraints(verticalConstraints)
         
         self.pullToRefreshViewHeightConstraint = NSLayoutConstraint(item: self.pullToRefreshView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: self.topView.bounds.height)
@@ -180,7 +180,7 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
             return
         }
         
-        let delta = (fabs(offsetY) - self.scrollViewOriginalOffsetY)
+        let delta = (abs(offsetY) - self.scrollViewOriginalOffsetY)
         let topViewCoefficient = delta / scrollViewOffsetYDeltaForTopViewZeroAlpha
         let newTopViewAlpha = max(0, 1 - topViewCoefficient)
         self.topView.alpha = newTopViewAlpha
@@ -222,7 +222,8 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     //MARK: - Gestures
     
     fileprivate var i = 0
-    func handleScrollViewPanGesture(_ panGesture: UIPanGestureRecognizer) {
+
+    @objc func handleScrollViewPanGesture(_ panGesture: UIPanGestureRecognizer) {
         if !self.isPanGestureHandlerAdded || self.state == .loading {
             return
         }
@@ -234,7 +235,7 @@ class ADChromePullToRefresh: NSObject, ADChromePullToRefreshViewDelegate {
     
     //MARK: - KVO
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if context != &self.context {
             return
         }
